@@ -5,7 +5,7 @@ require 'guard/opal-rails/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "guard-opal-rails"
-  spec.version       = Guard::OpalRails::VERSION
+  spec.version       = Guard::OpalRailsVersion::VERSION
   spec.authors       = ["Forrest Chang"]
   spec.email         = ["fkc_email-ruby@yahoo.com"]
   spec.summary       = %q{Guard gem for running specs in opal-rails}

@@ -1,9 +1,9 @@
 # options for opal-rails
-# spec_url: The url to hit to run the specs. You may want it to hit your rails_app/opal_spec
-# sound_on:  defaults to true set to false to turn off, works w/osx terminal-notifier
-# success_sound: Sound played with successful specs, defaults to "default", I use a custom applause sound
+# spec_url: The url to hit to run the specs. Point to your rails_app/opal_spec
+# sounds_on:  defaults to true set to false to turn off, works w/osx terminal-notifier
+# success_sound: Sound played with successful specs, defaults to "default". Needs to be in your OSX sound prefs
 # fail_sound: Sound played with failed specs, defaults to "Sosumi"
-guard "opal-rails", :spec_url => "http://accounts.hedgeye.dev/opal_spec" do
+guard "opal-rails", :spec_url => "your_rails_app/opal_spec", :sounds_on => true, :success_sound => "applause", :fail_sound => "submarine" do
   # include where opal files and opal specs live, below are the defaults for
   # opal-rails 0.7.1+
   watch Regexp.new("(app/assets/javascripts|spec-opal)/.+\.rb")

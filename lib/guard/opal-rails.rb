@@ -1,7 +1,6 @@
 require "guard/opal-rails/version"
 require 'guard/compat/plugin'
 
-notification "terminal_notifier"
 # notification "emacs"
 
 module Guard
@@ -19,7 +18,7 @@ module Guard
     def initialize(options = {})
       super
       @spec_url = options[:spec_url]
-      @sounds_on options[:sounds_on] || true
+      @sounds_on = options[:sounds_on] == false ? false :  true
       @success_sound = options[:success_sound] || "default"
       @fail_sound = options[:fail_sound] || "Sosumi"
     end
@@ -60,6 +59,16 @@ module Guard
       run_opal_specs
     end
 
+    # learned this trick from guard-rails-assets because guard plugins don't expect to have hyphenated names
+    def self.template(plugin_location)
+      File.read(template_path(plugin_location))
+    end
+
+    def self.template_path(plugin_location)
+      # workaround because Guard discards the '-' when detecting template path
+      File.join(plugin_location, 'lib', 'guard', 'opal-rails', 'templates', 'Guardfile')
+    end
+
     private
     # this is the opal-rspec runner that uses phantomjs to hit your page
     def spec_runner
@@ -76,26 +85,25 @@ module Guard
         failures = $3.to_i
         if failures > 0
           title = "#{failures} Specs failed"
-          sound = "Sosumi"
+          sound = @fail_sound
           image = :failed
         else
           title = "#{total} Specs passed"
-          sound = "applause"
+          sound = @success_sound
           image = :success
         end
       else
         message = results
         title = "Specs failed to run"
         image = :failed
-        sound = "Sosumi"
+        sound = @fail_sound
       end
       notify_params = {
-        message,
         type: image,
         title: title,
         open: @spec_url
       }
-      notify_params.merge!({sound: sound}) if @sound_on
+      notify_params.merge!({sound: sound}) if @sounds_on
       Guard::Compat::UI.notify(message, notify_params)
     end
   end

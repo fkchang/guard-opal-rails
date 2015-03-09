@@ -11,7 +11,7 @@ module Guard
     # 2) url not provided or nil, so se start up the standalong spec server
     class ProcessToggleFactory
       def self.process_toggle_for(options)
-        if options[:url]
+        if options[:spec_url]
           NullProcessToggle.new(options)
         else
           StandaloneSpecServerProcessToggle.new(options)

@@ -1,4 +1,3 @@
-require 'guard/compat/plugin'
 require 'guard/opal-rails/process_toggle'
 
 module Guard
@@ -14,7 +13,6 @@ module Guard
 
       def stop
       end
-
     end
   end
 end

@@ -1,9 +1,10 @@
- module Guard
+require 'guard/compat/plugin'
+module Guard
   class OpalRails < Plugin
     # Base class for process toggles.  These are classes which control
     # start/stop for various situations
     class ProcessToggle
-      def initialize(options)
+      def initialize(options = {})
         @options = options
       end
     end

@@ -1,6 +1,6 @@
 group :specs, halt_on_fail: true do
-  guard :rspec, cmd: "bundle exec rspec" do
-    require "guard/rspec/dsl"
+  guard :rspec, cmd: 'bundle exec rspec' do
+    require 'guard/rspec/dsl'
     dsl = Guard::RSpec::Dsl.new(self)
 
     # RSpec files
@@ -13,11 +13,11 @@ group :specs, halt_on_fail: true do
     dsl.watch_spec_files_for(dsl.ruby.lib_files)
 
     watch(%r{^(lib/guard/rspec/template)s/Guardfile$}) do
-      rspec.spec.("lib/guard/rspec/template")
+      rspec.spec.('lib/guard/rspec/template')
     end
 
     watch(%r{^lib/guard/rspec/dsl.rb$}) do
-      rspec.spec.("lib/guard/rspec/template")
+      rspec.spec.('lib/guard/rspec/template')
     end
   end
 

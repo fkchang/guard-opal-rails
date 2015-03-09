@@ -1,4 +1,3 @@
-require 'guard/compat/plugin'
 require 'guard/opal-rails/process_toggle'
 
 module Guard
@@ -20,7 +19,6 @@ module Guard
       def stop
         system 'bundle exec rake opal:spec:kill_server'
       end
-
     end
   end
 end

@@ -1,33 +1,41 @@
-require "guard/opal-rails/version"
+# rubocop:disable all
+require 'guard/opal-rails/version'
+# rubocop:enable all
 require 'guard/compat/plugin'
-
-# notification "emacs"
+require 'guard/opal-rails/process_toggle_factory'
 
 module Guard
+  # The Guard plugin to run opal-rails specs
   class OpalRails < Plugin
     # the plugin states we care about
 
     # Initializes a Guard plugin.
-    # Don't do any work here, especially as Guard plugins get initialized even if they are not in an active group!
+    # Don't do any work here, especially as Guard plugins get initialized
+    # even if they are not in an active group!
     #
     # @param [Hash] options the custom Guard plugin options
-    # @option options [Array<Guard::Watcher>] watchers the Guard plugin file watchers
+    # @option options [Array<Guard::Watcher>] watchers the Guard plugin file
+    #        watchers
     # @option options [Symbol] group the group this Guard plugin belongs to
-    # @option options [Boolean] any_return allow any object to be returned from a watcher
+    # @option options [Boolean] any_return allow any object to be returned from
+    #        a watcher
     #
     def initialize(options = {})
       super
-      @spec_url = options[:spec_url]
+      @process_toggle = ProcessToggleFactory.process_toggle_for options
+      @spec_url = @process_toggle.spec_url
       @sounds_on = options[:sounds_on] == false ? false :  true
-      @success_sound = options[:success_sound] || "default"
-      @fail_sound = options[:fail_sound] || "Sosumi"
+      @success_sound = options[:success_sound] || 'default'
+      @fail_sound = options[:fail_sound] || 'Sosumi'
     end
-    # Called once when Guard starts. Please override initialize method to init stuff.
+    # Called once when Guard starts. Please override initialize method to init
+    # stuff.
     #
     # @raise [:task_has_failed] when start has failed
     # @return [Object] the task result
     #
     def start
+      @process_toggle.start
       run_opal_specs
     end
 
@@ -37,10 +45,12 @@ module Guard
     # @return [Object] the task result
     #
     def stop
+      @process_toggle.stop
     end
 
     # Called when just `enter` is pressed
-    # This method should be principally used for long action like running all specs/tests/...
+    # This method should be principally used for long action like running all
+    # specs/tests/...
     #
     # @raise [:task_has_failed] when run_all has failed
     # @return [Object] the task result
@@ -55,27 +65,37 @@ module Guard
     # @raise [:task_has_failed] when run_on_modifications has failed
     # @return [Object] the task result
     #
+    # rubocop:disable all
     def run_on_modifications(paths)
+    # rubocop:enable all
+
       run_opal_specs
     end
 
-    # learned this trick from guard-rails-assets because guard plugins don't expect to have hyphenated names
+    # learned this trick from guard-rails-assets because guard plugins don't
+    # expect to have hyphenated names
     def self.template(plugin_location)
       File.read(template_path(plugin_location))
     end
 
     def self.template_path(plugin_location)
       # workaround because Guard discards the '-' when detecting template path
-      File.join(plugin_location, 'lib', 'guard', 'opal-rails', 'templates', 'Guardfile')
+      File.join(plugin_location, 'lib', 'guard', 'opal-rails', 'templates',
+                'Guardfile')
     end
 
     private
+
     # this is the opal-rspec runner that uses phantomjs to hit your page
     def spec_runner
-      @spec_runner ||= "#{Gem::Specification.find_by_path("opal-rspec").full_gem_path}/vendor/spec_runner.js"
+      @spec_runner ||= File.join(Gem::Specification.find_by_path('opal-rspec')
+                                  .full_gem_path,
+                                 '/vendor/spec_runner.js')
     end
 
     # Runs the specs, parses the output to give a notification
+
+    # rubocop:disable all
     def run_opal_specs
       results = `phantomjs #{spec_runner} #{@spec_url}`
       puts results              # want this to show on the terminal
@@ -94,7 +114,7 @@ module Guard
         end
       else
         message = results
-        title = "Specs failed to run"
+        title = 'Specs failed to run'
         image = :failed
         sound = @fail_sound
       end
@@ -103,8 +123,10 @@ module Guard
         title: title,
         open: @spec_url
       }
-      notify_params.merge!({sound: sound}) if @sounds_on
+
+      notify_params.merge!(sound: sound) if @sounds_on
       Guard::Compat::UI.notify(message, notify_params)
     end
+    # rubocop:enable all
   end
 end

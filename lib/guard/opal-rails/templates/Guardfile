@@ -1,5 +1,5 @@
-# options for opal-rails
-# spec_url: The url to hit to run the specs. Point to your rails_app/opal_spec
+# options for opal-rails - see README for more info
+# spec_url: The url to hit to run the specs. Point to your rails_app/opal_spec or don't set to run standalong server
 # sounds_on:  defaults to true set to false to turn off, works w/osx terminal-notifier
 # success_sound: Sound played with successful specs, defaults to "default". Needs to be in your OSX sound prefs
 # fail_sound: Sound played with failed specs, defaults to "Sosumi"
